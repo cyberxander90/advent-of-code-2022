@@ -16,7 +16,7 @@ def find_ranges(sensors, y)
   end.compact
 end
 
-def join_ranges(ranges, reversal: false)
+def join_ranges(ranges)
   result = []
 
   xs = ranges.map { |range| [range.first, range.last] }.flatten.uniq.sort
@@ -26,11 +26,7 @@ def join_ranges(ranges, reversal: false)
     result << x unless ranges.any? { |range| range.cover?(x+1) }
   end
 
-  result.shift if reversal && result.any?
-  result.pop if reversal && result.any?
-
-  n,m = reversal ? [1,-1] : [0, 0]
-  result.uniq.sort.each_slice(2).map { |(x,y)| (x+n..y+m) }
+  result.uniq.sort.each_slice(2).map { |(x,y)| (x..y) }
 end
 
 def count(ranges)
@@ -65,10 +61,11 @@ def part2(lines, max)
   (0..max).each do |y|
     puts y
     ranges = find_ranges(sensors, y)
-    ranges = join_ranges(ranges, reversal: true)
+    ranges = join_ranges(ranges)
     ranges = collapse_ranges(ranges, 0, max)
-    if count(ranges) == 1
-      x = ranges.first.first
+
+    if (max - 1 - count(ranges)) == 1
+      x = ranges.first.last + 1
       return x * 4000000 + y
     end
   end
