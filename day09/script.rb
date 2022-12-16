@@ -1,5 +1,5 @@
-INPUT = File.read(__dir__+'/input.txt').split(/\r?\n/)
-# INPUT = File.read(__dir__+'/test-input.txt').split(/\r?\n/)
+INPUT1 = File.read(__dir__+'/test-input.txt').split(/\r?\n/)
+INPUT2 = File.read(__dir__+'/input.txt').split(/\r?\n/)
 
 DIR = { L:[0,-1], R:[0,1], U:[-1,0], D:[1,0] }
 
@@ -18,11 +18,11 @@ def go_to((i,j), (i2,j2))
   ].compact
 end
 
-def visited_positions(length:)
+def visited_positions(lines, length:)
   head, *knots = [[0,0]] * length
   visited = [head]
   
-  INPUT.each do |line|
+  lines.each do |line|
     direction, steps = line.split(' ')
     steps.to_i.times do |i|
       head = move(head, direction)
@@ -42,5 +42,8 @@ def visited_positions(length:)
   visited.uniq.count
 end
 
-puts visited_positions(length: 2)
-puts visited_positions(length: 10)
+puts visited_positions(INPUT1, length: 2)
+puts visited_positions(INPUT2, length: 2)
+
+puts visited_positions(INPUT1, length: 10)
+puts visited_positions(INPUT2, length: 10)

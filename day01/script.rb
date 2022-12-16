@@ -1,10 +1,10 @@
-require 'rails'
+INPUT = File.read(__dir__+'/input.txt').split(/\r?\n/)
 
 l = []
 n = 0
 
-File.readlines("#{__dir__}/input.txt").each do |line|
-  if line.blank?
+INPUT.each do |line|
+  if line.strip == ''
     l << n
     n = 0
     next

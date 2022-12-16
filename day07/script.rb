@@ -1,7 +1,7 @@
 require "ostruct"
 
-# INPUT = File.read(__dir__+'/test-input.txt').split(/\r?\n/)
-INPUT = File.read(__dir__+'/input.txt').split(/\r?\n/)
+INPUT1 = File.read(__dir__+'/test-input.txt').split(/\r?\n/)
+INPUT2 = File.read(__dir__+'/input.txt').split(/\r?\n/)
 
 def new_dir(parent:)
   OpenStruct.new(parent: parent, dirs: {}, files: {}, size: 0)
@@ -21,14 +21,14 @@ def file_system(dir, lines)
   elsif (size, child_file = line.match(/^(\d+) (.+)$/)&.[](1..2))
     dir.files[child_file] = size.to_i
   end
-  
+
   return file_system(dir, lines)
 end
 
-def root_dir
+def root_dir(lines)
   root = new_dir(parent: nil)
   root.dirs['/'] = new_dir(parent: root)
-  file_system(root, INPUT)
+  file_system(root, lines)
   root
 end
 
@@ -47,24 +47,37 @@ def each(dir, &b)
   end
 end
 
-r = root_dir
-size(r)
+def part1(lines)
+  r = root_dir(lines.dup)
+  size(r)
 
-total = 0
-each(r) do |i|
-  if i[:type] == :dir && i[:size] <= 100000
-    total += i[:size]
+  total = 0
+  each(r) do |i|
+    if i[:type] == :dir && i[:size] <= 100000
+      total += i[:size]
+    end
   end
+
+  total
 end
 
-puts total
+def part2(lines)
+  r = root_dir(lines.dup)
+  size(r)
 
-free = 30000000 - (70000000 - r.dirs['/'].size)
-best = r.dirs['/'].size
-each(r) do |i|
-  if i[:type] == :dir && i[:size] < best && i[:size] > free
-    best = i[:size]
+  free = 30000000 - (70000000 - r.dirs['/'].size)
+  best = r.dirs['/'].size
+  each(r) do |i|
+    if i[:type] == :dir && i[:size] < best && i[:size] > free
+      best = i[:size]
+    end
   end
+
+  best
 end
 
-puts best
+puts part1(INPUT1)
+puts part1(INPUT2)
+
+puts part2(INPUT1)
+puts part2(INPUT2)

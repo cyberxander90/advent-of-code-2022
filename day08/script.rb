@@ -1,5 +1,6 @@
 GRID = File.read(__dir__+'/input.txt').split(/\r?\n/)
 # GRID = File.read("#{__dir__}/test-input.txt").split(/\r?\n/)
+
 N,M  = [GRID.length, GRID[0].length]
 
 def indexes
